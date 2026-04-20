@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -9,6 +10,9 @@ import {
 import type { KitchenOrder, OrderLine, OrderStatus } from '../types/order'
 
 const STORAGE_KEY = 'pluszero-test-restaurant-orders'
+
+const PERSIST_FAIL_MSG =
+  'ブラウザの保存領域に書き込めませんでした（容量不足やプライベートモード等）。画面はこのタブのみ更新されています。内容を控えてからタブを閉じないでください。'
 
 function loadOrders(): KitchenOrder[] {
   try {
@@ -22,8 +26,13 @@ function loadOrders(): KitchenOrder[] {
   }
 }
 
-function persist(orders: KitchenOrder[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders))
+function tryWriteStorage(next: KitchenOrder[]): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+    return true
+  } catch {
+    return false
+  }
 }
 
 function newId() {
@@ -34,6 +43,9 @@ type CartLineInput = OrderLine
 
 type OrderStoreValue = {
   orders: KitchenOrder[]
+  persistError: string | null
+  clearPersistError: () => void
+  reloadFromStorage: () => void
   placeOrder: (input: {
     tableLabel: string
     lines: CartLineInput[]
@@ -47,43 +59,103 @@ const OrderStoreContext = createContext<OrderStoreValue | null>(null)
 
 export function OrderStoreProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<KitchenOrder[]>(() => loadOrders())
+  const [persistError, setPersistError] = useState<string | null>(null)
 
-  const placeOrder = useCallback(
-    (input: { tableLabel: string; lines: CartLineInput[]; note: string }) => {
-      const order: KitchenOrder = {
-        id: newId(),
-        tableLabel: input.tableLabel.trim(),
-        createdAt: Date.now(),
-        items: input.lines.filter((l) => l.qty > 0),
-        note: input.note.trim(),
-        status: 'new',
+  const reloadFromStorage = useCallback(() => {
+    setPersistError(null)
+    setOrders(loadOrders())
+  }, [])
+
+  const clearPersistError = useCallback(() => setPersistError(null), [])
+
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.storageArea !== localStorage || e.key !== STORAGE_KEY) return
+      if (e.newValue === null) {
+        setOrders([])
+        return
       }
-      setOrders((prev) => {
-        const next = [order, ...prev]
-        persist(next)
-        return next
-      })
-      return order
-    },
-    []
-  )
+      try {
+        const parsed = JSON.parse(e.newValue) as unknown
+        if (Array.isArray(parsed)) setOrders(parsed as KitchenOrder[])
+      } catch {
+        /* ignore */
+      }
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
+
+  useEffect(() => {
+    function onVisibility() {
+      if (document.visibilityState !== 'visible') return
+      setOrders(loadOrders())
+      setPersistError(null)
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [])
+
+  const placeOrder = useCallback((input: { tableLabel: string; lines: CartLineInput[]; note: string }) => {
+    const order: KitchenOrder = {
+      id: newId(),
+      tableLabel: input.tableLabel.trim(),
+      createdAt: Date.now(),
+      items: input.lines.filter((l) => l.qty > 0),
+      note: input.note.trim(),
+      status: 'new',
+    }
+    setOrders((prev) => {
+      const next = [order, ...prev]
+      const ok = tryWriteStorage(next)
+      queueMicrotask(() => setPersistError(ok ? null : PERSIST_FAIL_MSG))
+      return next
+    })
+    return order
+  }, [])
 
   const advanceStatus = useCallback((orderId: string, status: OrderStatus) => {
     setOrders((prev) => {
-      const next = prev.map((o) => (o.id === orderId ? { ...o, status } : o))
-      persist(next)
+      const next = prev.map((o) => {
+        if (o.id !== orderId) return o
+        const patch: Partial<KitchenOrder> = { status }
+        if (status === 'done') patch.completedAt = Date.now()
+        return { ...o, ...patch }
+      })
+      const ok = tryWriteStorage(next)
+      queueMicrotask(() => setPersistError(ok ? null : PERSIST_FAIL_MSG))
       return next
     })
   }, [])
 
   const resetDemo = useCallback(() => {
-    setOrders([])
-    persist([])
+    setOrders(() => {
+      const next: KitchenOrder[] = []
+      const ok = tryWriteStorage(next)
+      queueMicrotask(() => setPersistError(ok ? null : PERSIST_FAIL_MSG))
+      return next
+    })
   }, [])
 
   const value = useMemo(
-    () => ({ orders, placeOrder, advanceStatus, resetDemo }),
-    [orders, placeOrder, advanceStatus, resetDemo]
+    () => ({
+      orders,
+      persistError,
+      clearPersistError,
+      reloadFromStorage,
+      placeOrder,
+      advanceStatus,
+      resetDemo,
+    }),
+    [
+      orders,
+      persistError,
+      clearPersistError,
+      reloadFromStorage,
+      placeOrder,
+      advanceStatus,
+      resetDemo,
+    ]
   )
 
   return (
@@ -91,6 +163,8 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Context とフックを同ファイルにまとめる一般的なパターン
+// eslint-disable-next-line react-refresh/only-export-components -- hook co-located with provider
 export function useOrderStore() {
   const ctx = useContext(OrderStoreContext)
   if (!ctx) throw new Error('useOrderStore must be used within OrderStoreProvider')
