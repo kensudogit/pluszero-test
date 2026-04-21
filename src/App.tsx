@@ -7,17 +7,19 @@ import { PersistErrorBanner } from './components/PersistErrorBanner'
 import { AnalyticsPage } from './components/AnalyticsPage'
 import { StoreMapPage } from './components/StoreMapPage'
 import { CallDeskPage } from './components/CallDeskPage'
+import { OperationsPage } from './components/OperationsPage'
 
-type Screen = 'customer' | 'kitchen' | 'analytics' | 'map' | 'call'
+type Screen = 'customer' | 'kitchen' | 'analytics' | 'map' | 'call' | 'ops'
 
-const DEMO_BUILD = 'demo 0.8'
+const DEMO_BUILD = 'demo 0.9'
 
 function tabIdForScreen(s: Screen): string {
   if (s === 'customer') return 'tab-customer'
   if (s === 'kitchen') return 'tab-kitchen'
   if (s === 'analytics') return 'tab-analytics'
   if (s === 'map') return 'tab-map'
-  return 'tab-call'
+  if (s === 'call') return 'tab-call'
+  return 'tab-ops'
 }
 
 function RestaurantDemo() {
@@ -91,6 +93,16 @@ function RestaurantDemo() {
           >
             通話・連絡
           </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={screen === 'ops'}
+            id="tab-ops"
+            className={screen === 'ops' ? 'tab active' : 'tab'}
+            onClick={() => setScreen('ops')}
+          >
+            運用・本番
+          </button>
         </nav>
       </header>
 
@@ -109,8 +121,10 @@ function RestaurantDemo() {
           <AnalyticsPage />
         ) : screen === 'map' ? (
           <StoreMapPage />
-        ) : (
+        ) : screen === 'call' ? (
           <CallDeskPage />
+        ) : (
+          <OperationsPage />
         )}
       </main>
 
@@ -122,6 +136,9 @@ function RestaurantDemo() {
             <li>リアルタイム同期（WebSocket / SSE）とキッチン優先ルール</li>
             <li>メニューCMS・売上レポ・既存POSとの連携要件の整理</li>
           </ul>
+          <button type="button" className="foot-ops-link" onClick={() => setScreen('ops')}>
+            運用・本番タブで監査ログ・API ヘルス・チェックリストを開く
+          </button>
         </div>
         <p className="foot-meta">
           画面上の計測値・リードタイムはブラウザ内セッションのサンプルです。契約後の要件定義で閾値・項目を確定できます。

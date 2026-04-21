@@ -821,6 +821,222 @@
   font-size: 0.78rem;
 }
 
+.foot-ops-link {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent, #38bdf8);
+  font-size: inherit;
+  font-family: inherit;
+  line-height: 1.6;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.foot-ops-link:hover {
+  color: var(--text-h);
+}
+
+/* 運用・本番ページ */
+.ops-panel.ops-panel {
+  padding-bottom: 20px;
+}
+
+.ops-head .panel-lead {
+  margin-top: 8px;
+}
+
+.ops-card {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--stroke);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.ops-section-title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.ops-section-sub {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+}
+
+.ops-hint {
+  margin: 0 0 16px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.ops-health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.ops-health-pill {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: var(--surface-1, rgba(15, 23, 42, 0.6));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ops-health-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ops-health-val {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.ops-health-val.ok {
+  color: #4ade80;
+}
+
+.ops-health-val.ng {
+  color: #fb7185;
+}
+
+.ops-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ops-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.ops-checkbox input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.ops-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.ops-api-probe {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--stroke);
+}
+
+.ops-probe-result {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.ops-probe-result.ok {
+  color: #4ade80;
+}
+
+.ops-probe-result.ng {
+  color: #fb7185;
+}
+
+.ops-audit-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ops-audit-toolbar .ops-section-title {
+  margin-bottom: 0;
+}
+
+.ops-audit-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ops-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -4px;
+  padding: 0 4px;
+}
+
+.ops-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.ops-table th,
+.ops-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--stroke);
+  vertical-align: top;
+}
+
+.ops-table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.ops-code {
+  font-size: 0.78em;
+  word-break: break-all;
+}
+
+.ops-details {
+  margin: 0;
+}
+
+.ops-details-summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent, #38bdf8);
+}
+
+.ops-details-summary::-webkit-details-marker {
+  margin-right: 8px;
+}
+
+.ops-checklist {
+  margin: 12px 0 0;
+  padding-left: 1.15rem;
+  line-height: 1.65;
+  font-size: 0.88rem;
+}
+
+.ops-card--collapse {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 /* KPI ストリップ（キッチン） */
 .stats-strip {
   display: grid;

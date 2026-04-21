@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { appendAuditEvent } from '../audit/auditLog'
 import type { KitchenOrder, OrderLine, OrderStatus } from '../types/order'
 
 const STORAGE_KEY = 'pluszero-test-restaurant-orders'
@@ -108,7 +109,14 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     setOrders((prev) => {
       const next = [order, ...prev]
       const ok = tryWriteStorage(next)
-      queueMicrotask(() => setPersistError(ok ? null : PERSIST_FAIL_MSG))
+      queueMicrotask(() => {
+        setPersistError(ok ? null : PERSIST_FAIL_MSG)
+        appendAuditEvent({
+          type: 'order.created',
+          orderId: order.id,
+          detail: `卓 ${order.tableLabel} / 明細 ${order.items.length} 行`,
+        })
+      })
       return next
     })
     return order
@@ -116,6 +124,7 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
 
   const advanceStatus = useCallback((orderId: string, status: OrderStatus) => {
     setOrders((prev) => {
+      const before = prev.find((o) => o.id === orderId)
       const next = prev.map((o) => {
         if (o.id !== orderId) return o
         const patch: Partial<KitchenOrder> = { status }
@@ -123,7 +132,14 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
         return { ...o, ...patch }
       })
       const ok = tryWriteStorage(next)
-      queueMicrotask(() => setPersistError(ok ? null : PERSIST_FAIL_MSG))
+      queueMicrotask(() => {
+        setPersistError(ok ? null : PERSIST_FAIL_MSG)
+        appendAuditEvent({
+          type: 'order.status',
+          orderId,
+          detail: `${before?.status ?? '?'} → ${status}`,
+        })
+      })
       return next
     })
   }, [])
@@ -132,7 +148,10 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     setOrders(() => {
       const next: KitchenOrder[] = []
       const ok = tryWriteStorage(next)
-      queueMicrotask(() => setPersistError(ok ? null : PERSIST_FAIL_MSG))
+      queueMicrotask(() => {
+        setPersistError(ok ? null : PERSIST_FAIL_MSG)
+        appendAuditEvent({ type: 'orders.cleared', detail: 'デモデータ全削除' })
+      })
       return next
     })
   }, [])
