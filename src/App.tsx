@@ -36,7 +36,7 @@ function RestaurantDemo() {
               </span>
             </div>
             <p className="brand-sub">
-              PC／店内タブレット幅・ローカルデモのみ（外部API・決済・認証なし）。データはこのブラウザに保存されます。
+              スマホ・タブレット・PC 対応のローカルデモ（外部API・決済・認証なし）。データはこのブラウザに保存されます。
             </p>
           </div>
         </div>
