@@ -1,6 +1,6 @@
 import { getRuntimeFlags } from '../config/runtimeConfig'
 
-/** 将来のバックエンド向けヘルスチェック（デモでは多くの場合フェイルする） */
+/** バックエンド向けヘルスチェック（GET {base}/health）。URL 未設定や到達不能時は失敗を返す。 */
 export async function probeApiHealth(): Promise<{ ok: boolean; message: string; ms?: number }> {
   const base = getRuntimeFlags().apiBaseUrl.trim().replace(/\/$/, '')
   if (!base) {

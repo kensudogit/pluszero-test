@@ -1,23 +1,42 @@
+function trimEnv(v: unknown): string {
+  return typeof v === 'string' ? v.trim() : ''
+}
+
+function parseCoord(v: unknown, fallback: number): number {
+  const s = trimEnv(v)
+  if (!s) return fallback
+  const n = Number(s)
+  return Number.isFinite(n) ? n : fallback
+}
+
+export type StoreLocationConfig = {
+  name: string
+  address: string
+  accessNote: string
+  phoneDisplay: string
+  phoneE164: string
+  phoneHours: string
+  lat: number
+  lng: number
+}
+
 /**
- * デモ用の店舗位置・住所（本番では環境変数や店舗マスタから取得する想定）
+ * 店舗情報は環境変数（VITE_STORE_*）で上書き。未設定時はビルド時の既定値を使用する。
  */
-export const STORE_LOCATION = {
-  /** 店舗名 */
-  name: 'サンプル食堂 西新宿店（デモ）',
-  /** 住所（展示用・架空の例） */
-  address: '〒160-0023 東京都新宿区西新宿2-8-1',
-  /** 交通の目安 */
-  accessNote: 'JR 新宿駅南口より徒歩約8分／地下鉄西新宿駅 A1 より徒歩3分',
-  /** 店舗代表電話（画面表示用・架空） */
-  phoneDisplay: '03-5980-1234',
-  /** E.164（tel: URI 用、先頭 + と国番号から数字のみ） */
-  phoneE164: '+81359801234',
-  /** 問い合わせ受付時間の注記 */
-  phoneHours: '受付 11:00–22:00（年中無休・デモ文言）',
-  /** 緯度・経度（WGS84）— マーカー位置 */
-  lat: 35.6938,
-  lng: 139.6925,
-} as const
+export const STORE_LOCATION: StoreLocationConfig = {
+  name: trimEnv(import.meta.env.VITE_STORE_NAME) || '本店',
+  address:
+    trimEnv(import.meta.env.VITE_STORE_ADDRESS) ||
+    '〒160-0023 東京都新宿区西新宿2-8-1',
+  accessNote:
+    trimEnv(import.meta.env.VITE_STORE_ACCESS_NOTE) ||
+    'JR 新宿駅南口より徒歩約8分／地下鉄西新宿駅 A1 より徒歩3分',
+  phoneDisplay: trimEnv(import.meta.env.VITE_STORE_PHONE_DISPLAY) || '03-5980-1234',
+  phoneE164: trimEnv(import.meta.env.VITE_STORE_PHONE_E164) || '+81359801234',
+  phoneHours: trimEnv(import.meta.env.VITE_STORE_PHONE_HOURS) || '受付 11:00–22:00（年中無休）',
+  lat: parseCoord(import.meta.env.VITE_STORE_LAT, 35.6938),
+  lng: parseCoord(import.meta.env.VITE_STORE_LNG, 139.6925),
+}
 
 /** ブラウザからデバイスの電話アプリへ渡す発信リンク */
 export function buildTelUri(): string {

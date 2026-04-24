@@ -121,7 +121,7 @@ function OrderCard({
 }
 
 export function KitchenBoard() {
-  const { orders, advanceStatus, resetDemo, reloadFromStorage } = useOrderStore()
+  const { orders, advanceStatus, clearAllOrders, reloadFromStorage } = useOrderStore()
   const now = useNow()
   const [resetOpen, setResetOpen] = useState(false)
 
@@ -178,12 +178,12 @@ export function KitchenBoard() {
             再読込
           </button>
           <button type="button" className="btn ghost danger" onClick={() => setResetOpen(true)}>
-            デモデータをクリア…
+            全オーダーをクリア…
           </button>
         </div>
       </header>
 
-      <section className="stats-strip" aria-label="オペレーション指標（本セッション）">
+      <section className="stats-strip" aria-label="オペレーション指標（この端末）">
         <div className="stat-chip">
           <span className="stat-label">アクティブ件数</span>
           <span className="stat-value">{stats.active}</span>
@@ -234,7 +234,7 @@ export function KitchenBoard() {
 
       <section className="done-strip" aria-label="直近の完了注文">
         <h3>
-          直近の完了 <span className="muted small">（最大8件・本ブラウザ内のセッション）</span>
+          直近の完了 <span className="muted small">（最大8件・この端末の保存データ）</span>
         </h3>
         {recentDone.length === 0 ? (
           <p className="muted">完了した注文はまだありません。</p>
@@ -262,14 +262,14 @@ export function KitchenBoard() {
 
       <ConfirmDialog
         open={resetOpen}
-        title="デモデータをすべて削除しますか？"
-        description="ローカルに保存されている注文履歴が消えます。この操作は取り消せません。"
+        title="保存されている全注文を削除しますか？"
+        description="この端末のブラウザに保存されている注文履歴が消えます。この操作は取り消せません。"
         confirmLabel="削除する"
         cancelLabel="やめる"
         danger
         onCancel={() => setResetOpen(false)}
         onConfirm={() => {
-          resetDemo()
+          clearAllOrders()
           setResetOpen(false)
         }}
       />

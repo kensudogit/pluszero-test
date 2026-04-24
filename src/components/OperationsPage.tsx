@@ -109,10 +109,10 @@ export function OperationsPage() {
     <div className="panel ops-panel">
       <header className="panel-head ops-head">
         <div>
-          <h2>運用・本番準備</h2>
+          <h2>運用コンソール</h2>
           <p className="panel-lead">
-            監査ログ・ランタイム設定・API 接続スタブをまとめました。本番では認証・RBAC・監査の永続化・WSS
-            同期・CMS をバックエンドと接続します。
+            監査ログ・ランタイム設定・API ヘルスをまとめています。認証・RBAC・監査のサーバ永続化・リアルタイム同期・CMS
+            はバックエンドと接続して運用してください。
           </p>
         </div>
       </header>
@@ -142,8 +142,8 @@ export function OperationsPage() {
       <section className="ops-card" aria-label="ランタイム設定">
         <h3 className="ops-section-title">ランタイム設定（ブラウザに保存）</h3>
         <p className="muted ops-hint">
-          <code>VITE_API_BASE_URL</code> をビルド時に渡すか、下記で上書きできます。同期モードは UI
-          表示用です（デモの注文保存は引き続き localStorage です）。
+          <code>VITE_API_BASE_URL</code> をビルド時に渡すか、下記で上書きできます。現行構成では注文データは端末内の
+          localStorage に保存され、同期モードは将来の API 置き換え向けの表示メモです。
         </p>
         <div className="ops-form">
           <label className="field">
@@ -186,7 +186,7 @@ export function OperationsPage() {
         </div>
 
         <div className="ops-api-probe">
-          <p className="ops-section-sub">API ヘルス（スタブ）</p>
+          <p className="ops-section-sub">API ヘルス</p>
           <button type="button" className="btn ghost btn-compact" disabled={health.loading} onClick={runHealth}>
             {health.loading ? '確認中…' : '/health を試行'}
           </button>
@@ -249,7 +249,7 @@ export function OperationsPage() {
 
       <section className="ops-card ops-card--collapse">
         <details className="ops-details">
-          <summary className="ops-details-summary">本番での拡張チェックリスト（要件のたたき台）</summary>
+          <summary className="ops-details-summary">運用・セキュリティチェックリスト（要件のたたき台）</summary>
           <ul className="ops-checklist">
             <li>認証（OIDC / セッション）と端末紐付け・スタッフ RBAC</li>
             <li>監査ログのサーバ永続化・改ざん耐性・保全期間</li>

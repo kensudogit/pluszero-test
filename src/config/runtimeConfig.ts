@@ -1,5 +1,5 @@
 /**
- * 本番では環境変数・リモート設定と同期。デモでは localStorage で上書き可能。
+ * ビルド時の環境変数を既定とし、運用画面からの上書きは localStorage に保存する。
  */
 export type SyncMode = 'local' | 'api_stub'
 
@@ -12,7 +12,7 @@ export type RuntimeFlags = {
   auditEnabled: boolean
 }
 
-const LS_KEY = 'pluszero-test-runtime-flags'
+const LS_KEY = 'pz-instore-runtime-v1'
 
 const DEFAULTS: RuntimeFlags = {
   apiBaseUrl: typeof import.meta.env.VITE_API_BASE_URL === 'string' ? import.meta.env.VITE_API_BASE_URL : '',

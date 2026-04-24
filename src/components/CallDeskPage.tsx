@@ -70,14 +70,13 @@ export function CallDeskPage() {
         ) : null}
 
         <p className="muted call-desk-note">
-          <strong>デモ環境:</strong> 電話番号は架空です。本番では店舗マスタ・
-          <code>tel:</code> 用 E.164 を登録します。PC ブラウザでは <code>tel:</code>{' '}
-          リンクが動かないことがあります。
+          表示番号は環境変数（<code>VITE_STORE_PHONE_*</code>）または店舗マスタで管理してください。PC
+          ブラウザでは <code>tel:</code> リンクが動作しない場合があります。
         </p>
       </section>
 
       <section className="call-desk-card call-desk-card--mute" aria-label="実装の補足">
-        <h3 className="call-desk-subtitle">本番で想定できる拡張</h3>
+        <h3 className="call-desk-subtitle">電話・通信の拡張オプション</h3>
         <ul className="call-desk-list">
           <li>クラウド PBX・CTI と連携したクリックコール／着信ポップアップ</li>
           <li>WebRTC＋シグナリングサーバによるブラウザ内音声（スタッフ内線・サポート）</li>

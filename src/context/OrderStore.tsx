@@ -10,7 +10,7 @@ import {
 import { appendAuditEvent } from '../audit/auditLog'
 import type { KitchenOrder, OrderLine, OrderStatus } from '../types/order'
 
-const STORAGE_KEY = 'pluszero-test-restaurant-orders'
+const STORAGE_KEY = 'pz-instore-orders-v1'
 
 const PERSIST_FAIL_MSG =
   'ブラウザの保存領域に書き込めませんでした（容量不足やプライベートモード等）。画面はこのタブのみ更新されています。内容を控えてからタブを閉じないでください。'
@@ -53,7 +53,7 @@ type OrderStoreValue = {
     note: string
   }) => KitchenOrder
   advanceStatus: (orderId: string, status: OrderStatus) => void
-  resetDemo: () => void
+  clearAllOrders: () => void
 }
 
 const OrderStoreContext = createContext<OrderStoreValue | null>(null)
@@ -144,13 +144,13 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const resetDemo = useCallback(() => {
+  const clearAllOrders = useCallback(() => {
     setOrders(() => {
       const next: KitchenOrder[] = []
       const ok = tryWriteStorage(next)
       queueMicrotask(() => {
         setPersistError(ok ? null : PERSIST_FAIL_MSG)
-        appendAuditEvent({ type: 'orders.cleared', detail: 'デモデータ全削除' })
+        appendAuditEvent({ type: 'orders.cleared', detail: '全注文データを削除' })
       })
       return next
     })
@@ -164,7 +164,7 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
       reloadFromStorage,
       placeOrder,
       advanceStatus,
-      resetDemo,
+      clearAllOrders,
     }),
     [
       orders,
@@ -173,7 +173,7 @@ export function OrderStoreProvider({ children }: { children: ReactNode }) {
       reloadFromStorage,
       placeOrder,
       advanceStatus,
-      resetDemo,
+      clearAllOrders,
     ]
   )
 

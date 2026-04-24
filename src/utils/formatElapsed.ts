@@ -1,4 +1,4 @@
-/** 経過時間を読みやすい日本語表記にします（プレゼン・オペ監視向け）。 */
+/** 経過時間を読みやすい日本語表記にします（オペ監視・画面表示向け）。 */
 export function formatElapsed(ms: number): string {
   if (!Number.isFinite(ms) || ms < 0) return '—'
   const sec = Math.floor(ms / 1000)

@@ -1,6 +1,6 @@
 import { getRuntimeFlags } from '../config/runtimeConfig'
 
-const STORAGE_KEY = 'pluszero-test-audit-log'
+const STORAGE_KEY = 'pz-instore-audit-v1'
 const MAX_EVENTS = 200
 
 export type AuditEventType = 'order.created' | 'order.status' | 'orders.cleared'

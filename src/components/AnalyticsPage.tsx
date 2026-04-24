@@ -323,7 +323,7 @@ export function AnalyticsPage() {
         <div className="kpi-tile">
           <span className="kpi-label">対象注文数</span>
           <span className="kpi-value">{summary.orderCount}</span>
-          <span className="kpi-hint">全期間・本セッション</span>
+          <span className="kpi-hint">全期間・この端末のデータ</span>
         </div>
         <div className="kpi-tile">
           <span className="kpi-label">売上（税込想定）</span>

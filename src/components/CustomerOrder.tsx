@@ -142,7 +142,7 @@ export function CustomerOrder() {
             aria-describedby="table-hint"
           />
           <span id="table-hint" className="field-hint">
-            ホール案内と同一の卓番・席名を入力してください（本デモでは形式チェックのみ省略）。
+            ホール案内と同一の卓番・席名を入力してください（店舗ポリシーに応じて形式チェックを追加できます）。
           </span>
         </label>
       </div>

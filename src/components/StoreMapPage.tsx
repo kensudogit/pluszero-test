@@ -16,7 +16,8 @@ export function StoreMapPage() {
         <div>
           <h2>店舗までの地図</h2>
           <p className="panel-lead">
-            OpenStreetMap の埋め込み地図で位置を確認できます（ネット接続時）。実店舗の住所・座標は契約後に差し替え可能です。
+            OpenStreetMap の埋め込み地図で位置を確認できます（ネット接続時）。住所・座標は環境変数（
+            <code>VITE_STORE_*</code>）または店舗マスタで差し替えてください。
           </p>
         </div>
       </header>
@@ -61,7 +62,7 @@ export function StoreMapPage() {
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
             OpenStreetMap
           </a>{' '}
-          contributors。表示はデモ用の座標です。
+          contributors。マーカー位置は店舗設定の緯度経度に基づきます。
         </p>
       </section>
     </div>
