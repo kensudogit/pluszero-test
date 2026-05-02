@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { readAuditLog, clearAuditLog, type AuditEvent } from '../audit/auditLog'
 import { getRuntimeFlags, saveRuntimeFlags, resetRuntimeFlagsToDefaults, type RuntimeFlags } from '../config/runtimeConfig'
 import { probeApiHealth } from '../services/apiClient'
+import { OpsSecurityChecklist } from './OpsSecurityChecklist'
 
 function useOnline() {
   const [online, setOnline] = useState(() => (typeof navigator !== 'undefined' ? navigator.onLine : true))
@@ -247,19 +248,7 @@ export function OperationsPage() {
         )}
       </section>
 
-      <section className="ops-card ops-card--collapse">
-        <details className="ops-details">
-          <summary className="ops-details-summary">運用・セキュリティチェックリスト（要件のたたき台）</summary>
-          <ul className="ops-checklist">
-            <li>認証（OIDC / セッション）と端末紐付け・スタッフ RBAC</li>
-            <li>監査ログのサーバ永続化・改ざん耐性・保全期間</li>
-            <li>リアルタイム同期（WebSocket / SSE）、オフラインキュー・コンフリクト解決</li>
-            <li>メニュー CMS・レート制限・API のスロットリング／バックオフ</li>
-            <li>個人情報最小化・TLS・CSP・ログマスキング</li>
-            <li>POS／会計／在庫との連携インタフェース策定</li>
-          </ul>
-        </details>
-      </section>
+      <OpsSecurityChecklist />
     </div>
   )
 }
